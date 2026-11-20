@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <h1>Battery Table</h1>
+  <input id="nameBox">
+  <input type="number" id="voltBox">
+  <button onclick="addBattery()">Add</button>
+  <p id="msg"></p>
+  <table id="batteryTable" border="1"></table>
+  <script>
+    let batteries = JSON.parse(localStorage.getItem("batteryTable"));
+    if (batteries === null) {
+      batteries = [
+        { name: "G41", volts: 12.7 },
+        { name: "G42", volts: 12.1 },
+        { name: "G43", volts: 11.5 }
+      ];//batteries =
+    };//batteries === null
+
+    function getBatteryStatus(battery) {
+      if (battery.volts < 11.8) {
+        return "Replace";
+      } else if (battery.volts < 12.4) {
+        return "Charge";
+      } else {
+        return "Good";
+      };
+    };//getBatteryStatus()
+
+    function showTable() {
+      let rows = "<tr><th>Generator</th><th>Volts</th><th>Status</th><th></th></tr>";
+      for (let i = 0; i < batteries.length; i++) {
+        rows = rows + "<tr>";
+        rows = rows + "<td>" + batteries[i].name + "</td>";
+        rows = rows + "<td>" + batteries[i].volts + "</td>";
+        rows = rows + "<td>" + getBatteryStatus(batteries[i]) + "</td>";
+        rows = rows + "<td><button onclick='deleteBattery(" + i + ")'>delete</button></td>";
+        rows = rows + "</tr>";
+      };//let rows
+      document.getElementById("batteryTable").innerHTML = rows;
+    };//showTable()
+    showTable();
+
+    function addBattery() {
+      let name = document.getElementById("nameBox").value.toUpperCase();
+      let volt = document.getElementById("voltBox").value;
+      if (name === "") {
+        document.getElementById("msg").textContent = "Please write battery name";
+        return;
+      };
+      if (volt === "") {
+        document.getElementById("msg").textContent = "Please write battery volt";
+        return;
+      };
+      let newBattery = {
+        name: name,
+        volts: Number(document.getElementById("voltBox").value)
+      };
+      batteries.push(newBattery);
+      localStorage.setItem("batteryTable", JSON.stringify(batteries));
+      showTable();
+      document.getElementById("msg").textContent = "Added";
+      document.getElementById("nameBox").value = "";
+      document.getElementById("voltBox").value = "";
+    };//addBattery()
+
+    function deleteBattery(i) {
+      let name = batteries[i].name;
+      batteries.splice(i, 1);
+      localStorage.setItem("batteryTable", JSON.stringify(batteries));
+      showTable();
+      document.getElementById("msg").textContent = name + " deleted";
+    };//deleteBattery(
+  </script>
+
+</body>
+
+</html>
