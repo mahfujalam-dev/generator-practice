@@ -9,12 +9,13 @@
 
 <body>
   <h1>Generator Battery Check</h1>
+  <p>Practice page by Mahfuj. All data is sample data.</p>
   <input id="nameBox">
   <input type="number" id="voltBox">
   <button onclick="addBattery()">Add</button>
   <p id="msg"></p>
   <table id="batteryTable" border="1"></table>
-  <p>Practice page by Mahfuj. All data is sample data.</p>
+
   <script>
     let batteries = JSON.parse(localStorage.getItem("batteryTable"));
     if (batteries === null) {
